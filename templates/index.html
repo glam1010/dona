@@ -1,3 +1,6 @@
+{% load static %}
+{% csrf_token %}
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -7,14 +10,15 @@
     <title>Home Page</title>
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900" rel="stylesheet">
 
-    <link rel="stylesheet" href="css/bootstrap.css">
-    <link rel="stylesheet" href="css/font-awesome.min.css">
-    <link rel="stylesheet" href="css/owl.carousel.min.css">
-    <link rel="stylesheet" href="css/owl.theme.default.min.css">
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="responsive.css">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/owl.theme.default.min.css' %}">
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <link rel="stylesheet" href="{% static 'responsive.css' %}">
 </head>
 
 <body>
@@ -30,7 +34,8 @@
                         </div>
                         <div class="col-md-4 col-sm-4">
                             <div class="join-us">
-                                <p><a href="#">JOIN US NOW</a></p>
+                                <p><a href="{% url 'login' %}">JOIN US NOW</a></p>
+
                             </div>
                         </div>
                     </div>
@@ -42,7 +47,7 @@
                         <div class="col-md-5 col-sm-12 col-xs-12">
                             <a href="#">
                                 <div class="main-logo">
-                                    <img src="img/main-logo.png" alt="">
+                                    <img src="{% static 'img/main-logo.png' %}" alt="">
                                     <h2>DONA CHARITY</h2>
                                 </div>
                             </a>
@@ -73,7 +78,7 @@
                                 <div class="text">
                                     <h3>CHILDREN NEED YOUR HELP</h3>
                                     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim <br> ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo </p>
-                                    <h5 class="white-button"><a href="#">DONATE NOW</a></h5>
+                                    <h5 class="white-button"><a href="#" id="mpesa-donate-1">DONATE NOW</a></h5>
                                     <h5><a href="#">CONTACT US</a></h5>
                                 </div>
                             </div>
@@ -81,7 +86,7 @@
                                 <div class="text">
                                     <h3>CHILDREN NEED YOUR HELP</h3>
                                     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim <br> ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo </p>
-                                    <h5 class="white-button"><a href="#">DONATE NOW</a></h5>
+                                    <h5 class="white-button"><a href="#" id="mpesa-donate-2">DONATE NOW</a></h5>
                                     <h5><a href="#">CONTACT US</a></h5>
                                 </div>
                             </div>
@@ -89,7 +94,7 @@
                                 <div class="text">
                                     <h3>CHILDREN NEED YOUR HELP</h3>
                                     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim <br> ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo </p>
-                                    <h5 class="white-button"><a href="#">DONATE NOW</a></h5>
+                                    <h5 class="white-button"><a href="#" id="paypal-donate-1">DONATE NOW</a></h5>
                                     <h5><a href="#">CONTACT US</a></h5>
                                 </div>
                             </div>
@@ -97,7 +102,7 @@
                                 <div class="text">
                                     <h3>CHILDREN NEED YOUR HELP</h3>
                                     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim <br> ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo </p>
-                                    <h5 class="white-button"><a href="#">DONATE NOW</a></h5>
+                                    <h5 class="white-button"><a href="#" id="paypal-donate-2">DONATE NOW</a></h5>
                                     <h5><a href="#">CONTACT US</a></h5>
                                 </div>
                             </div>
@@ -105,7 +110,7 @@
                                 <div class="text">
                                     <h3>CHILDREN NEED YOUR HELP</h3>
                                     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim <br> ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo </p>
-                                    <h5 class="white-button"><a href="#">DONATE NOW</a></h5>
+                                    <h5 class="white-button"><a href="#" id="mpesa-donate-3">DONATE NOW</a></h5>
                                     <h5><a href="#">CONTACT US</a></h5>
                                 </div>
                             </div>
@@ -114,6 +119,65 @@
                 </div>
             </div>
         </section>
+        
+        <script>
+        // Function to get CSRF token from the cookie
+        function getCSRFToken() {
+            let csrfToken = null;
+            const cookies = document.cookie.split(';');
+            cookies.forEach(cookie => {
+                if (cookie.trim().startsWith('csrftoken=')) {
+                    csrfToken = cookie.trim().substring(10);  // Extract CSRF token
+                }
+            });
+            return csrfToken;
+        }
+        // Handle MPesa Donation
+        function handleMpesaDonation() {
+            document.getElementById('mpesa-donate').onclick = function () {
+                fetch('/payments/mpesa/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCSRFToken()  // Add CSRF token to the request headers
+                    },  
+                    body: JSON.stringify({ amount: 100 })
+                })
+                .then(response => response.json())
+                .then(data => alert(JSON.stringify(data)))
+                .catch(error => console.error('MPesa Error:', error));
+            };
+        }
+        
+        // Handle PayPal Donation
+        function handlePaypalDonation() {
+            document.getElementById('paypal-donate').onclick = function () {
+                fetch('/payments/paypal/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCSRFToken()  // Add CSRF token to the request headers
+                    },
+                    body: JSON.stringify({ amount: 100 })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.approval_url) {
+                        window.location.href = data.approval_url;
+                    }
+                })
+                .catch(error => console.error('PayPal Error:', error));
+            };
+        }
+        
+        // Attach handlers to each button
+        handleMpesaDonation('mpesa-donate-1');
+        handleMpesaDonation('mpesa-donate-2');
+        handlePaypalDonation('paypal-donate-1');
+        handlePaypalDonation('paypal-donate-2');
+        handleMpesaDonation('mpesa-donate-3');
+        </script>
+        
         <section class="our_activity">
             <h2>OUR ACTIVITY</h2>
             <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor <br> incididunt ut labore et dolore magna aliqua. </p>
@@ -148,14 +212,14 @@
                     </div>
                 </div>
             </div>
-        </section>
+        </section>    
         <section class="donate_section">
             <div class="container">
                 <div class="row">
                     <div class="col-md-12 for-padding">
                         <h4>URGENT CAUSE</h4>
                         <h3>Recent Environmental Disasters</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </p>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
                         <div class="progress-text">
                             <p class="progress-top">50%</p>
                             <div class="progress">
@@ -164,11 +228,23 @@
                             <p class="progress-left">Raised: $1200</p>
                             <p class="progress-right">Goal: $2400</p>
                         </div>
-                        <h2><a href="#">DONATE NOW</a></h2>
+                        <h2><a href="donate.html">DONATE NOW</a></h2>
+                        
+                        <!-- Donation Form -->
+                        <form method="POST" action="{% url 'donate' %}">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="donation_amount">Donation Amount:</label>
+                                <input type="number" name="amount" id="donation_amount" class="form-control" placeholder="Enter amount" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Donate</button>
+                        </form>
+                        <!-- End of Donation Form -->
                     </div>
                 </div>
             </div>
         </section>
+        
         <section class="events_section_area">
             <h2>UPCOMING EVENTS</h2>
             <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor <br> incididunt ut labore et dolore magna aliqua. </p>
@@ -176,7 +252,7 @@
                 <div class="row">
                     <div class="col-md-4 col-xs-12">
                         <div class="events_single">
-                            <img src="img/events_single_one.jpg" alt="">
+                            <img src="{% static 'img/events_single_one.jpg' %}" alt="">
                             <p><span class="event_left"><i class="material-icons">access_time</i>1:00 pm - 3:00 pm</span><span class="event_right"><i class="material-icons">location_on</i>California Street</span></p>
                             <div class="clear"></div>
                             <h3>Education For Children</h3>
@@ -185,7 +261,7 @@
                     </div>
                     <div class="col-md-4 col-xs-12">
                         <div class="events_single">
-                            <img src="img/events_single_two.jpg" alt="">
+                            <img src="{% static 'img/events_single_two.jpg' %}" alt="">
                             <p><span class="event_left"><i class="material-icons">access_time</i>1:00 pm - 3:00 pm</span><span class="event_right"><i class="material-icons">location_on</i>California Street</span></p>
                             <h3>Education For Children</h3>
                             <h6>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,</h6>
@@ -193,7 +269,7 @@
                     </div>
                     <div class="col-md-4 col-xs-12">
                         <div class="events_single">
-                            <img src="img/events_single_three.jpg" alt="">
+                            <img src="{% static 'img/events_single_three.jpg' %}" alt="">
                             <p><span class="event_left"><i class="material-icons">access_time</i>1:00 pm - 3:00 pm</span><span class="event_right"><i class="material-icons">location_on</i>California Street</span></p>
                             <h3>Education For Children</h3>
                             <h6>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,</h6>
@@ -202,8 +278,7 @@
                 </div>
             </div>
         </section>
-
-
+        
         <div class="block-wrapper">
             <div class="container">
                 <div class="row">
@@ -246,7 +321,7 @@
                     <div class="col-md-12">
                         <div class="our_cuauses_single owl-carousel owl-theme">
                             <div class="item">
-                                <img src="img/our_cuauses_one.jpg" alt="">
+                                <img src="{% static 'img/our_cuauses_one.jpg' %}" alt="">
                                 <div class="for_padding">
                                     <h2>FUTURES FOR CHILDREN</h2>
                                     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minima</p>
@@ -258,11 +333,11 @@
                                         <p class="progress-left">Raised: <span>$1200</span></p>
                                         <p class="progress-right">Goal: <span>$2400</span></p>
                                     </div>
-                                    <h2 class="borderes"><a href="#">DONATE NOW</a></h2>
+                                    <h2 class="borderes"><a href="{% url 'donate' %}">DONATE NOW</a></h2> <!-- Updated link -->
                                 </div>
                             </div>
                             <div class="item">
-                                <img src="img/our_cuauses_two.jpg" alt="">
+                                <img src="{% static 'img/our_cuauses_two.jpg' %}" alt="">
                                 <div class="for_padding">
                                     <h2>FUTURES FOR CHILDREN</h2>
                                     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minima</p>
@@ -274,11 +349,11 @@
                                         <p class="progress-left">Raised: <span>$1200</span></p>
                                         <p class="progress-right">Goal: <span>$2400</span></p>
                                     </div>
-                                    <h2 class="borderes"><a href="#">DONATE NOW</a></h2>
+                                    <h2 class="borderes"><a href="{% url 'donate' %}">DONATE NOW</a></h2> <!-- Updated link -->
                                 </div>
                             </div>
                             <div class="item">
-                                <img src="img/our_cuauses_three.jpg" alt="">
+                                <img src="{% static 'img/our_cuauses_three.jpg' %}" alt="">
                                 <div class="for_padding">
                                     <h2>FUTURES FOR CHILDREN</h2>
                                     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minima</p>
@@ -290,11 +365,11 @@
                                         <p class="progress-left">Raised: <span>$1200</span></p>
                                         <p class="progress-right">Goal: <span>$2400</span></p>
                                     </div>
-                                    <h2 class="borderes"><a href="#">DONATE NOW</a></h2>
+                                    <h2 class="borderes"><a href="{% url 'donate' %}">DONATE NOW</a></h2> <!-- Updated link -->
                                 </div>
                             </div>
                             <div class="item">
-                                <img src="img/our_cuauses_three.jpg" alt="">
+                                <img src="{% static 'img/our_cuauses_three.jpg' %}" alt="">
                                 <div class="for_padding">
                                     <h2>FUTURES FOR CHILDREN</h2>
                                     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minima</p>
@@ -306,7 +381,7 @@
                                         <p class="progress-left">Raised: <span>$1200</span></p>
                                         <p class="progress-right">Goal: <span>$2400</span></p>
                                     </div>
-                                    <h2 class="borderes"><a href="#">DONATE NOW</a></h2>
+                                    <h2 class="borderes"><a href="{% url 'donate' %}">DONATE NOW</a></h2> <!-- Updated link -->
                                 </div>
                             </div>
                         </div>
@@ -314,6 +389,7 @@
                 </div>
             </div>
         </section>
+        
         <section class="donors">
             <div class="container">
                 <div class="row">
@@ -338,10 +414,10 @@
                                 </h5>
                                 <h4>
                                     <select>
-                                    <option>I Want To Donate For 1</option>
-                                    <option>I Want To Donate For 2</option>
-                                    <option>I Want To Donate For 3</option>
-                                </select>
+                                        <option>I Want To Donate For 1</option>
+                                        <option>I Want To Donate For 2</option>
+                                        <option>I Want To Donate For 3</option>
+                                    </select>
                                 </h4>
                                 <input type="submit" value="DONATION NOW">
                             </form>
@@ -350,22 +426,22 @@
                             <h2>FEATURED DONORS</h2>
                             <div class="donors_featured owl-carousel owl-theme">
                                 <div class="item">
-                                    <img src="img/donors_featured_one.jpg" alt="">
+                                    <img src="{% static 'img/donors_featured_one.jpg' %}" alt="">
                                     <h3>Kenneth J. Garnica</h3>
                                     <p>Donated Amount : <span>220 USD</span> </p>
                                 </div>
                                 <div class="item">
-                                    <img src="img/donors_featured_one.jpg" alt="">
+                                    <img src="{% static 'img/donors_featured_one.jpg' %}" alt="">
                                     <h3>Kenneth J. Garnica</h3>
                                     <p>Donated Amount : <span>220 USD</span> </p>
                                 </div>
                                 <div class="item">
-                                    <img src="img/donors_featured_one.jpg" alt="">
+                                    <img src="{% static 'img/donors_featured_one.jpg' %}" alt="">
                                     <h3>Kenneth J. Garnica</h3>
                                     <p>Donated Amount : <span>220 USD</span> </p>
                                 </div>
                                 <div class="item">
-                                    <img src="img/donors_featured_one.jpg" alt="">
+                                    <img src="{% static 'img/donors_featured_one.jpg' %}" alt="">
                                     <h3>Kenneth J. Garnica</h3>
                                     <p>Donated Amount : <span>220 USD</span> </p>
                                 </div>
@@ -375,6 +451,7 @@
                 </div>
             </div>
         </section>
+        
         <div class="clear"></div>
         <section class="volunteer_area">
             <h2>Our Volunteer</h2>
@@ -384,7 +461,7 @@
                     <div class="col-md-12">
                         <div class="volunteer_single owl-carousel owl-theme">
                             <div class="item">
-                                <img src="img/volanteer_1.jpg" alt="">
+                                <img src="{% static 'img/volanteer_1.jpg' %}" alt="">
                                 <div class="text">
                                     <h3>Laura Jammy</h3>
                                     <h6>Designer</h6>
@@ -393,7 +470,7 @@
                                 </div>
                             </div>
                             <div class="item">
-                                <img src="img/volanteer_2.jpg" alt="">
+                                <img src="{% static 'img/volanteer_2.jpg' %}" alt="">
                                 <div class="text">
                                     <h3>Albert R. Ardoin</h3>
                                     <h6>Actor</h6>
@@ -402,7 +479,7 @@
                                 </div>
                             </div>
                             <div class="item">
-                                <img src="img/volanteer_3.jpg" alt="">
+                                <img src="{% static 'img/volanteer_3.jpg' %}" alt="">
                                 <div class="text">
                                     <h3>Cynthia Anni</h3>
                                     <h6>Singer</h6>
@@ -411,7 +488,7 @@
                                 </div>
                             </div>
                             <div class="item">
-                                <img src="img/volanteer_1.jpg" alt="">
+                                <img src="{% static 'img/volanteer_1.jpg' %}" alt="">
                                 <div class="text">
                                     <h3>Laura Jammy</h3>
                                     <h6>Designer</h6>
@@ -420,7 +497,7 @@
                                 </div>
                             </div>
                             <div class="item">
-                                <img src="img/volanteer_2.jpg" alt="">
+                                <img src="{% static 'img/volanteer_2.jpg' %}" alt="">
                                 <div class="text">
                                     <h3>Albert R. Ardoin</h3>
                                     <h6>Actor</h6>
@@ -429,13 +506,45 @@
                                 </div>
                             </div>
                             <div class="item">
-                                <img src="img/volanteer_3.jpg" alt="">
+                                <img src="{% static 'img/volanteer_3.jpg' %}" alt="">
                                 <div class="text">
                                     <h3>Cynthia Anni</h3>
                                     <h6>Singer</h6>
                                     <p>Lorem ipsum dolor sit amet, consectetur adipisi</p>
                                     <h5><a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a><a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a><a href="#"><i class="fa fa-behance" aria-hidden="true"></i></a></h5>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+  <section class="carosal_bottom">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="carosal_bottom_single owl-carousel owl-theme">
+                            <div class="item">
+                                <img src="{% static 'img/volanteer_1.jpg' %}" alt="Volunteer Image">
+                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                                <h5><i class="material-icons">format_quote</i></h5>
+                                <h4>Florence M. Cofer</h4>
+                                <h6>Designer</h6>
+                            </div>
+                            <div class="item">
+                                <img src="{% static 'img/volanteer_2.jpg' %}" alt="Volunteer Image">
+                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                                <h5><i class="material-icons">format_quote</i></h5>
+                                <h4>Florence M. Cofer</h4>
+                                <h6>Designer</h6>
+                            </div>
+                            <div class="item">
+                                <img src="{% static 'img/volanteer_3.jpg' %}" alt="Volunteer Image">
+                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                                <h5><i class="material-icons">format_quote</i></h5>
+                                <h4>Florence M. Cofer</h4>
+                                <h6>Designer</h6>
                             </div>
                         </div>
                     </div>
@@ -443,37 +552,7 @@
             </div>
         </section>
 
-        <section class="carosal_bottom">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="carosal_bottom_single owl-carousel owl-theme">
-                            <div class="item">
-                                <img src="img/volanteer_1.jpg" alt="">
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit.</p>
-                                <h5><i class="material-icons">format_quote</i></h5>
-                                <h4>Florence M. Cofer</h4>
-                                <h6>Designer</h6>
-                            </div>
-                            <div class="item">
-                                <img src="img/volanteer_2.jpg" alt="">
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit.</p>
-                                <h5><i class="material-icons">format_quote</i></h5>
-                                <h4>Florence M. Cofer</h4>
-                                <h6>Designer</h6>
-                            </div>
-                            <div class="item">
-                                <img src="img/volanteer_3.jpg" alt="">
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit.</p>
-                                <h5><i class="material-icons">format_quote</i></h5>
-                                <h4>Florence M. Cofer</h4>
-                                <h6>Designer</h6>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+        <!-- Latest News Section -->
         <section class="letast_news">
             <h2>latest news</h2>
             <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor <br> incididunt ut labore et dolore magna aliqua. </p>
@@ -481,7 +560,7 @@
                 <div class="row">
                     <div class="col-md-4">
                         <div class="single_news">
-                            <img src="img/news_images_1.jpg" alt="">
+                            <img src="{% static 'img/news_images_1.jpg' %}" alt="News Image 1">
                             <div class="texts">
                                 <p class="date"><a href="#">30 May, 2017</a></p>
                                 <h3>Wood Work Adds Value To <br> Your Property Five</h3>
@@ -492,7 +571,7 @@
                     </div>
                     <div class="col-md-4">
                         <div class="single_news">
-                            <img src="img/news_images_2.jpg" alt="">
+                            <img src="{% static 'img/news_images_2.jpg' %}" alt="News Image 2">
                             <div class="texts">
                                 <p class="date"><a href="#">30 May, 2017</a></p>
                                 <h3>Wood Work Adds Value To <br> Your Property Five</h3>
@@ -503,7 +582,7 @@
                     </div>
                     <div class="col-md-4">
                         <div class="single_news">
-                            <img src="img/news_images_3.jpg" alt="">
+                            <img src="{% static 'img/news_images_3.jpg' %}" alt="News Image 3">
                             <div class="texts">
                                 <p class="date"><a href="#">30 May, 2017</a></p>
                                 <h3>Wood Work Adds Value To <br> Your Property Five</h3>
@@ -516,25 +595,26 @@
             </div>
         </section>
 
+        <!-- Footer Carousel Section -->
         <section class="footer_carosal">
             <div class="container">
                 <div class="row">
                     <div class="col-md-12">
                         <div class="footer_carosal_icon owl-carousel owl-theme">
                             <div class="item">
-                                <img src="img/microsoft.png" alt="">
+                                <img src="{% static 'img/microsoft.png' %}" alt="Microsoft Logo">
                             </div>
                             <div class="item">
-                                <img src="img/envato.png" alt="">
+                                <img src="{% static 'img/envato.png' %}" alt="Envato Logo">
                             </div>
                             <div class="item">
-                                <img src="img/yahoo.png" alt="">
+                                <img src="{% static 'img/yahoo.png' %}" alt="Yahoo Logo">
                             </div>
                             <div class="item">
-                                <img src="img/jquery.png" alt="">
+                                <img src="{% static 'img/jquery.png' %}" alt="jQuery Logo">
                             </div>
                             <div class="item">
-                                <img src="img/amazon.png" alt="">
+                                <img src="{% static 'img/amazon.png' %}" alt="Amazon Logo">
                             </div>
                         </div>
                     </div>
@@ -542,17 +622,21 @@
             </div>
         </section>
 
-
-
+        <!-- Footer Section -->
         <footer class="footer">
             <div class="container">
                 <div class="row">
                     <div class="col-md-4 col-sm-12">
                         <div class="footer-charity-text">
                             <h2>HELP CHARITY</h2>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris </p>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
                             <hr>
-                            <p><a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a><a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a><a href="#"><i class="fa fa-behance" aria-hidden="true"></i></a><a href="#"><i class="fa fa-dribbble" aria-hidden="true"></i></a></p>
+                            <p>
+                                <a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+                                <a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a>
+                                <a href="#"><i class="fa fa-behance" aria-hidden="true"></i></a>
+                                <a href="#"><i class="fa fa-dribbble" aria-hidden="true"></i></a>
+                            </p>
                         </div>
                     </div>
                     <div class="col-md-8">
@@ -563,8 +647,6 @@
                                     <ul>
                                         <li><a href="#"><i class="material-icons">keyboard_arrow_right</i> Consectetur Adipisicing Elit</a></li>
                                         <li><a href="#"><i class="material-icons">keyboard_arrow_right</i> Consectetur Adipisicing </a></li>
-                                        <li><a href="#"><i class="material-icons">keyboard_arrow_right</i> Consectetur Adipisicing Elit</a></li>
-                                        <li><a href="#"><i class="material-icons">keyboard_arrow_right</i> Consectetur Adipisicing</a></li>
                                         <li><a href="#"><i class="material-icons">keyboard_arrow_right</i> Consectetur Adipisicing Elit</a></li>
                                     </ul>
                                 </div>
@@ -595,31 +677,21 @@
                 </div>
             </div>
             <div class="footer_bottom">
-                <p>Copyright @ 2017 <a href="#">DartThemes</a> | All Rights Reserved </p>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                            <p>&copy; 2017 All Rights Reserved | Design by <a href="https://dartthemes.com/">Dartthemes</a></p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </footer>
     </div>
-    <script src="js/jquery-3.1.1.min.js"></script>
-    <script src="js/animationCounter.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/owl.carousel.min.js"></script>
-    <script src="js/active.js"></script>
 
-    <script type="text/javascript">
-        var _gaq = _gaq || [];
-        _gaq.push(['_setAccount', 'UA-36251023-1']);
-        _gaq.push(['_setDomainName', 'jqueryscript.net']);
-        _gaq.push(['_trackPageview']);
-
-        (function() {
-            var ga = document.createElement('script');
-            ga.type = 'text/javascript';
-            ga.async = true;
-            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-            var s = document.getElementsByTagName('script')[0];
-            s.parentNode.insertBefore(ga, s);
-        })();
-    </script>
+    <!-- JS Scripts -->
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
 </body>
-
 </html>
