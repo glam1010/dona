@@ -1,4 +1,5 @@
 {% load static %}
+{% csrf_token %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -33,7 +34,8 @@
                         </div>
                         <div class="col-md-4 col-sm-4">
                             <div class="join-us">
-                                <p><a href="#">JOIN US NOW</a></p>
+                                <p><a href="{% url 'login' %}">JOIN US NOW</a></p>
+
                             </div>
                         </div>
                     </div>
@@ -75,40 +77,40 @@
                             <div class="item">
                                 <div class="text">
                                     <h3>CHILDREN NEED YOUR HELP</h3>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim <br> ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo </p>
-                                    <h5 class="white-button"><a href="#">DONATE NOW</a></h5>
+                                    <p>      </p>
+                                    <h5 class="white-button"><a href="#" id="mpesa-donate-1">DONATE NOW</a></h5>
                                     <h5><a href="#">CONTACT US</a></h5>
                                 </div>
                             </div>
                             <div class="item">
                                 <div class="text">
                                     <h3>CHILDREN NEED YOUR HELP</h3>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim <br> ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo </p>
-                                    <h5 class="white-button"><a href="#">DONATE NOW</a></h5>
+                                    <p>Pain itself is very important to the soul, for it is the source of all pleasure. For, to achieve this, those who labor and toil must face hardships and great toil. For the sake of obtaining a small pleasure, they undertake painful effort, unless they are driven by some necessity <br> To the least extent necessary, anyone may exercise their labor unless they obtain something from it as a result </p>
+                                    <h5 class="white-button"><a href="#" id="mpesa-donate-2">DONATE NOW</a></h5>
                                     <h5><a href="#">CONTACT US</a></h5>
                                 </div>
                             </div>
                             <div class="item">
                                 <div class="text">
                                     <h3>CHILDREN NEED YOUR HELP</h3>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim <br> ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo </p>
-                                    <h5 class="white-button"><a href="#">DONATE NOW</a></h5>
+                                    <p>Pain itself, it is loved, sits at the very essence of life; because it is something great, to achieve and to bear pain. For this reason…<br> To the least degree of favor, who exercises no customary labor unless taking some portion from this convenience. </p>
+                                    <h5 class="white-button"><a href="#" id="paypal-donate-1">DONATE NOW</a></h5>
                                     <h5><a href="#">CONTACT US</a></h5>
                                 </div>
                             </div>
                             <div class="item">
                                 <div class="text">
                                     <h3>CHILDREN NEED YOUR HELP</h3>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim <br> ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo </p>
-                                    <h5 class="white-button"><a href="#">DONATE NOW</a></h5>
+                                    <p>Pain itself, it is pain that is important, is love, but they are seeking, the time of life will come, so that they may exercise themselves with labor and pain. To take pleasure in the least.<br> To take the least amount of effort, who exercises in work unless they take something from it for their comfort.</p>
+                                    <h5 class="white-button"><a href="#" id="paypal-donate-2">DONATE NOW</a></h5>
                                     <h5><a href="#">CONTACT US</a></h5>
                                 </div>
                             </div>
                             <div class="item">
                                 <div class="text">
                                     <h3>CHILDREN NEED YOUR HELP</h3>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim <br> ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo </p>
-                                    <h5 class="white-button"><a href="#">DONATE NOW</a></h5>
+                                    <p>Pain itself, pain itself is love, it is the main pursuit of elitism, but occasionally it happens through labor and great pain. In order that<br> To the least extent, one seeks to avoid exercising or working unless it provides some benefit from the effort </p>
+                                    <h5 class="white-button"><a href="#" id="mpesa-donate-3">DONATE NOW</a></h5>
                                     <h5><a href="#">CONTACT US</a></h5>
                                 </div>
                             </div>
@@ -117,9 +119,69 @@
                 </div>
             </div>
         </section>
+        
+        <script>
+        // Function to get CSRF token from the cookie
+        function getCSRFToken() {
+            let csrfToken = null;
+            const cookies = document.cookie.split(';');
+            cookies.forEach(cookie => {
+                if (cookie.trim().startsWith('csrftoken=')) {
+                    csrfToken = cookie.trim().substring(10);  // Extract CSRF token
+                }
+            });
+            return csrfToken;
+        }
+        // Handle MPesa Donation
+        function handleMpesaDonation() {
+            document.getElementById('mpesa-donate').onclick = function () {
+                fetch('/payments/mpesa/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCSRFToken()  // Add CSRF token to the request headers
+                    },  
+                    body: JSON.stringify({ amount: 100 })
+                })
+                .then(response => response.json())
+                .then(data => alert(JSON.stringify(data)))
+                .catch(error => console.error('MPesa Error:', error));
+            };
+        }
+        
+        // Handle PayPal Donation
+        function handlePaypalDonation() {
+            document.getElementById('paypal-donate').onclick = function () {
+                fetch('/payments/paypal/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCSRFToken()  // Add CSRF token to the request headers
+                    },
+                    body: JSON.stringify({ amount: 100 })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.approval_url) {
+                        window.location.href = data.approval_url;
+                    }
+                })
+                .catch(error => console.error('PayPal Error:', error));
+            };
+        }
+        
+        // Attach handlers to each button
+        handleMpesaDonation('mpesa-donate-1');
+        handleMpesaDonation('mpesa-donate-2');
+        handlePaypalDonation('paypal-donate-1');
+        handlePaypalDonation('paypal-donate-2');
+        handleMpesaDonation('mpesa-donate-3');
+        </script>
+        
         <section class="our_activity">
             <h2>OUR ACTIVITY</h2>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor <br> incididunt ut labore et dolore magna aliqua. </p>
+            <p>is placeholder text commonly used in publishing and design. It does not have a meaningful translation, as it is derived from Latin but intended to be nonsensical
+    <br> To the least extent, one seeks to avoid exercising or working unless it provides some benefit from the effortua </p>
             <div class="container">
                 <div class="row">
                     <div class="col-md-4 col-xs-12">
@@ -158,7 +220,7 @@
                     <div class="col-md-12 for-padding">
                         <h4>URGENT CAUSE</h4>
                         <h3>Recent Environmental Disasters</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </p>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
                         <div class="progress-text">
                             <p class="progress-top">50%</p>
                             <div class="progress">
@@ -168,6 +230,17 @@
                             <p class="progress-right">Goal: $2400</p>
                         </div>
                         <h2><a href="#">DONATE NOW</a></h2>
+                        
+                        <!-- Donation Form -->
+                        <form method="POST" action="{% url 'donate' %}">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="donation_amount">Donation Amount:</label>
+                                <input type="number" name="amount" id="donation_amount" class="form-control" placeholder="Enter amount" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Donate</button>
+                        </form>
+                        <!-- End of Donation Form -->
                     </div>
                 </div>
             </div>
@@ -241,7 +314,6 @@
                 </div>
             </div>
         </div>
-        
         <section class="our_cuauses">
             <h2>OUR CAUSES</h2>
             <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor <br> incididunt ut labore et dolore magna aliqua. </p>
@@ -262,7 +334,7 @@
                                         <p class="progress-left">Raised: <span>$1200</span></p>
                                         <p class="progress-right">Goal: <span>$2400</span></p>
                                     </div>
-                                    <h2 class="borderes"><a href="#">DONATE NOW</a></h2>
+                                    <h2 class="borderes"><a href="{% url 'donate' %}">DONATE NOW</a></h2> <!-- Updated link -->
                                 </div>
                             </div>
                             <div class="item">
@@ -278,7 +350,7 @@
                                         <p class="progress-left">Raised: <span>$1200</span></p>
                                         <p class="progress-right">Goal: <span>$2400</span></p>
                                     </div>
-                                    <h2 class="borderes"><a href="#">DONATE NOW</a></h2>
+                                    <h2 class="borderes"><a href="{% url 'donate' %}">DONATE NOW</a></h2> <!-- Updated link -->
                                 </div>
                             </div>
                             <div class="item">
@@ -294,7 +366,7 @@
                                         <p class="progress-left">Raised: <span>$1200</span></p>
                                         <p class="progress-right">Goal: <span>$2400</span></p>
                                     </div>
-                                    <h2 class="borderes"><a href="#">DONATE NOW</a></h2>
+                                    <h2 class="borderes"><a href="{% url 'donate' %}">DONATE NOW</a></h2> <!-- Updated link -->
                                 </div>
                             </div>
                             <div class="item">
@@ -310,7 +382,7 @@
                                         <p class="progress-left">Raised: <span>$1200</span></p>
                                         <p class="progress-right">Goal: <span>$2400</span></p>
                                     </div>
-                                    <h2 class="borderes"><a href="#">DONATE NOW</a></h2>
+                                    <h2 class="borderes"><a href="{% url 'donate' %}">DONATE NOW</a></h2> <!-- Updated link -->
                                 </div>
                             </div>
                         </div>
@@ -380,6 +452,7 @@
                 </div>
             </div>
         </section>
+        
         <div class="clear"></div>
         <section class="volunteer_area">
             <h2>Our Volunteer</h2>
