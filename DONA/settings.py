@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'users',
+    'accounts',
 ]
 
 MIDDLEWARE = [
@@ -103,6 +104,8 @@ MEDIA_ROOT = BASE_DIR / 'media'  # Folder to store uploaded files
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+AUTH_USER_MODEL = 'accounts.CustomUser'
+
 
 # Additional settings for production (optional)
 # If you are running in production, you might want to configure the following settings:
