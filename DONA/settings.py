@@ -1,5 +1,5 @@
 from pathlib import Path
-import os  # Add this line
+import os  # Add this line for os functions
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -40,10 +40,14 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'DONA.urls'
 
+# Templates configuration
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],  # Add this line
+        'DIRS': [
+            BASE_DIR / 'templates',  # Path to the global templates directory
+            BASE_DIR / 'accounts' / 'templates',  # Path to the templates inside the accounts app
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -89,23 +93,19 @@ USE_I18N = True
 USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
-# Static files settings for development and production
-
 STATIC_URL = '/static/'  # URL to access static files
 STATICFILES_DIRS = [
     BASE_DIR / "static",  # Folder where your static files like images, fonts, etc. are located
 ]
 STATIC_ROOT = BASE_DIR / 'staticfiles'  # Folder where static files are collected after running `collectstatic`
 
-# Configure media files (optional)
-# If you plan to handle file uploads, you can add media settings:
+# Media files (optional)
 MEDIA_URL = '/media/'  # URL for serving media files
 MEDIA_ROOT = BASE_DIR / 'media'  # Folder to store uploaded files
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'accounts.CustomUser'
-
 
 # Additional settings for production (optional)
 # If you are running in production, you might want to configure the following settings:
