@@ -232,7 +232,7 @@
                         <h2><a href="#">DONATE NOW</a></h2>
                         
                         <!-- Donation Form -->
-                        <form method="POST" action="{% url 'donate' %}">
+                        <form method="POST" action="{% url 'donate' %}" id="donationForm">
                             {% csrf_token %}
                             <div class="form-group">
                                 <label for="donation_amount">Donation Amount:</label>
@@ -245,6 +245,37 @@
                 </div>
             </div>
         </section>
+        
+        <script>
+        document.getElementById('donationForm').addEventListener('submit', function(e) {
+            e.preventDefault();  // Prevent the form from submitting normally
+        
+            let csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;  // Get CSRF token value
+            let amount = document.getElementById('donation_amount').value;  // Get the amount value from the form
+        
+            // Send AJAX request
+            fetch('/donate/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',  // Set content type to JSON
+                    'X-CSRFToken': csrfToken  // Include the CSRF token in the request headers
+                },
+                body: JSON.stringify({
+                    amount: amount,  // Include the form data (e.g., amount)
+                })
+            })
+            .then(response => response.json())  // Parse the response as JSON
+            .then(data => {
+                // Handle the response data
+                console.log(data);
+                alert('Donation successful!');
+            })
+            .catch(error => {
+                console.error('Error:', error);  // Handle any errors
+            });
+        });
+        </script>
+        
         
         <section class="events_section_area">
             <h2>UPCOMING EVENTS</h2>
